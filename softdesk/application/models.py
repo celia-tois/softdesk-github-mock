@@ -28,6 +28,9 @@ class Contributor(models.Model):
         max_length=30,
         default='contributor'
         )
+    
+    class Meta:
+        unique_together = ['user', 'project']
 
 
 class Issue(models.Model):
