@@ -27,8 +27,8 @@ class IssueSerializer(ModelSerializer):
         read_only_fields = ('project', 'author')
 
     def to_representation(self, instance):
-        representation = super(IssueSerializer, self).to_representation(instance)
-        representation['project'] = instance.project.title
+        representation = super().to_representation(instance)
+        return {**representation, 'project': instance.project.title}
 
 
 class CommentSerializer(ModelSerializer):
@@ -36,3 +36,11 @@ class CommentSerializer(ModelSerializer):
         model = Comment
         fields = '__all__'
         read_only_fields = ('author', 'issue')
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        return {
+            **representation,
+            'author': instance.author.email,
+            'issue': instance.issue.title,
+            }
