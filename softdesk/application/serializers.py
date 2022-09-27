@@ -13,12 +13,6 @@ class ContributorSerializer(ModelSerializer):
         fields = '__all__'
         read_only_fields = ('project', 'role')
 
-    def to_representation(self, instance):
-        representation = super(ContributorSerializer, self).to_representation(instance)
-        representation['project'] = instance.project.title
-        representation['user'] = instance.user.email
-        return representation
-
 
 class IssueSerializer(ModelSerializer):
     class Meta:
@@ -26,21 +20,9 @@ class IssueSerializer(ModelSerializer):
         fields = '__all__'
         read_only_fields = ('project', 'author')
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return {**representation, 'project': instance.project.title}
-
 
 class CommentSerializer(ModelSerializer):
     class Meta:
         model = Comment
         fields = '__all__'
         read_only_fields = ('author', 'issue')
-
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        return {
-            **representation,
-            'author': instance.author.email,
-            'issue': instance.issue.title,
-            }
