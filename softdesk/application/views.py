@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from application.serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
 from application.models import Project, Contributor, Issue, Comment
-from application.permissions import IsUserAuthor
+from application.permissions import IsContributor
 from authentication.models import User
 from django.shortcuts import render
 
@@ -10,7 +10,7 @@ class ProjectViewset(ModelViewSet):
     """
     A ViewSet for viewing projects.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsContributor]
     queryset = Project.objects.all()
     serializer_class = ProjectSerializer
 
@@ -18,19 +18,19 @@ class ProjectViewset(ModelViewSet):
         project = serializer.save()
         user_email = self.request._user.email
         user = User.objects.get(email=user_email)
-        role = "author"
-        Contributor.objects.create(
+        contributor = Contributor(
             project=project,
             user=user,
-            role=role,
+            role="author",
         )
+        contributor.save()
 
 
 class UserViewset(ModelViewSet):
     """
     A ViewSet for viewing users.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsContributor]
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
 
@@ -47,7 +47,7 @@ class IssueViewset(ModelViewSet):
     """
     A ViewSet for viewing issues.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsContributor]
     queryset = Issue.objects.all()
     serializer_class = IssueSerializer
 
@@ -63,7 +63,7 @@ class CommentViewset(ModelViewSet):
     """
     A ViewSet for viewing issues.
     """
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated & IsContributor]
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
 
