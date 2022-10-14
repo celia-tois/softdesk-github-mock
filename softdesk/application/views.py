@@ -2,7 +2,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 from application.serializers import ProjectSerializer, ContributorSerializer, IssueSerializer, CommentSerializer
 from application.models import Project, Contributor, Issue, Comment
-from application.permissions import IsContributor
+from application.permissions import IsContributor, IsAuthorizedToAddContributor
 from authentication.models import User
 from django.shortcuts import render
 
@@ -30,7 +30,7 @@ class UserViewset(ModelViewSet):
     """
     A ViewSet for viewing users.
     """
-    permission_classes = [IsAuthenticated & IsContributor]
+    permission_classes = [IsAuthenticated & IsContributor & IsAuthorizedToAddContributor]
     queryset = Contributor.objects.all()
     serializer_class = ContributorSerializer
 
@@ -61,7 +61,7 @@ class IssueViewset(ModelViewSet):
 
 class CommentViewset(ModelViewSet):
     """
-    A ViewSet for viewing issues.
+    A ViewSet for viewing comments.
     """
     permission_classes = [IsAuthenticated & IsContributor]
     queryset = Comment.objects.all()
