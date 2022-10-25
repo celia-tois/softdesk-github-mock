@@ -49,7 +49,7 @@ class IsAuthorizedToAddContributor(BasePermission):
             author_id = None
         if request.method in SAFE_METHODS:
             return True
-        elif request.method == 'POST' and author_id == request.user.id:
+        elif author_id == request.user.id:
             return True
         return False
         
