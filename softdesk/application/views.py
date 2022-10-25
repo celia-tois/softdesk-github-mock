@@ -5,6 +5,7 @@ from application.models import Project, Contributor, Issue, Comment
 from application.permissions import IsContributor, IsAuthorizedToAddContributor
 from authentication.models import User
 from django.shortcuts import render
+from django.db import IntegrityError
 
 class ProjectViewset(ModelViewSet):
     """
@@ -35,9 +36,12 @@ class UserViewset(ModelViewSet):
     serializer_class = ContributorSerializer
 
     def perform_create(self, serializer):
-        project_id = self.kwargs.get('project_pk')
-        project = Project.objects.get(id=project_id)
-        serializer.save(project=project, role='contributor')
+        try:
+            project_id = self.kwargs.get('project_pk')
+            project = Project.objects.get(id=project_id)
+            serializer.save(project=project, role='contributor')
+        except IntegrityError:
+            pass
 
     def get_queryset(self):
         return Contributor.objects.filter(project=self.kwargs['project_pk'])
