@@ -5,7 +5,7 @@ The Softdesk API allow the user to create projects, add contributors to specific
 1. Open the Terminal
 2. Clone the repository:
 ```
-$ git clone https://github.com/CeliaTois/CeliaTOIS_10_22082022.git
+$ git clone https://github.com/celia-tois/softdesk-github-mock.git
 ```
 3. Go to the project folder:
 ```
